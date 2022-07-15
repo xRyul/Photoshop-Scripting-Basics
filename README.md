@@ -890,3 +890,6 @@ selectTool('gradientTool');
 
 ```
 
+### Big inspo
+https://github.com/MarshySwamp/
+https://gist.github.com/MarshySwamp/
