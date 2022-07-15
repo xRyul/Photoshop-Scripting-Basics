@@ -45,7 +45,7 @@
 ```javascript
 /*
 Photoshop Document Dimensions - MP Value - Aspect Ratio.jsx
-v1.0, Stephen Marsh 13th February 2022
+v1.0, Stephen Marsh 13th February 2022 https://github.com/MarshySwamp/
 */
 
 #target photoshop
