@@ -1,5 +1,12 @@
 # Photoshop-Scripting-Basics
 
+- Check how many documents are open
+- Close
+- Log any files processed in Photoshop into `.csv` e.g.: machine ID, user, username, filename etc. macOS
+- Get computer name and username on macOS
+- Save JPEG with Quality 12
+- Save TIFF into subfolder without changing filename
+- Save
 - Simple and default canvas resize
 - Resize Image based on the longest edge (If larger than 3000px then downscale it, if shorter then upscale it)
 - Set ruler units to PIXELS
@@ -33,8 +40,126 @@
 - Save TIFF with JPEG Compression 10, ZIP
 - Select Gradient Tool
 
+#### Check how many documents are open
+```javascript
+if (!documents.length) alert("No Open documents");
+else alert(documents.length + " images opened");
+```
+
+#### Close 
+```javascript
+app.activeDocument.close();
+```
+
+#### Log any files processed in Photoshop into `.csv` e.g.: machine ID, user, username, filename etc.
+```javascript
+//Make sure it is macOS
+function isMacOS() {
+  return ($.os.toLowerCase().indexOf('mac') >= 0);
+}
+
+///////////////////////////////////////////Prepare for Logging///////////////////////////////////////////////
+//Obtains the computers name/username. @returns {String} The name of the computers username.
+function getUserName() {
+  return (isMacOS()) ? $.getenv("USER") : $.getenv("USERNAME");
+}
+
+var userName = getUserName();
+$.sleep(2325);
+
+//Log Output
+// Create the log file with Today's Date
+var now = new Date();
+var logfile_name = now.getFullYear() + "-" + ("0" + (now.getMonth() +1)).slice(-2) + "-" + ("0" + now.getDate()).slice(-2)
+
+var f = new Folder(folderName + logfile_name);
+if ( ! f.exists ) { //1st make sure the path exists, if not create it
+        f.create(); //create folder
+        var fileOut = new File(f+"/"+ userName +'-UploadedCR'+'.csv');
+}else{
+    //If "username-Uploaded.csv" already exists, then do nothing
+}
+
+//2nd make sure file is there, if not create one. And read through it. 
+var fileOut = new File(f+"/"+ userName +'-UploadedCR'+'.csv');
+fileOut.open("r");
+
+    var str ="";
+    while(!fileOut.eof)
+    str += fileOut.readln();
+    fileOut.close();
+
+var n = str.match(docRef.name); //input what to search for
+
+// Check if it was already exported
+if (n) {
+  //do nothing
+} else {
+
+      var fileOut = new File(f+"/"+ userName +'-UploadedCR'+'.csv');
+      if (!fileOut.exists) {
+
+              fileOut.open("w");
+              fileOut.writeln(docRef.name);
+
+              fileOut.close();
+        } else {    
+
+            fileOut.open("a+");
+            fileOut.writeln(docRef.name);
+
+            fileOut.close();
+    }
+}
+```
+
+#### Get computer name and username on macOS
+```javascript
+//Make sure it is macOS
+function isMacOS() {
+  return ($.os.toLowerCase().indexOf('mac') >= 0);
+}
+
+function getUserName() {
+  return (isMacOS()) ? $.getenv("USER") : $.getenv("USERNAME");
+}
+
+var userName = getUserName();
+```
+
+
+#### Save JPEG with Quality 12
+```javascript
+folderJpegSave = "/Volumes/Custom/Location/Jpegsubfolder/";
+var saveJPEG = new JPEGSaveOptions();
+saveJPEG.embedColorProfile = true;
+saveJPEG.formatOptions = FormatOptions.STANDARDBASELINE;
+saveJPEG.quality = 12;
+app.activeDocument.saveAs(new File(folderJpegSave + "/" + docRef.name), saveJPEG);
+```
+
+#### Save TIFF into subfolder without changing filename
+```javscript
+folderTiffSave = "/Volumes/Custom/Location/TIFFsubfolder/";
+
+var saveTIFF = new TiffSaveOptions();
+saveTIFF.embedColorProfile = true;
+saveTIFF.layers = false;
+saveTIFF.imageCompression = TIFFEncoding.TIFFLZW;
+saveTIFF.alphaChannels = false;
+app.activeDocument.saveAs(new File(folderTiffSave + "/" + docRef.name), saveTIFF);
+
+```
+
+#### Save
+```javscript
+app.activeDocument.save();
+```
 
 #### Simple and default canvas resize
+```javascript
+app.activeDocument.resizeCanvas(3000, 3000, AnchorPosition.MIDDLECENTER); //e..g anchor set to middle makes it square and expands it by 3k pixels
+```
 
 #### Resize Image based on the longest edge (If larger than 3000px then downscale it, if shorter then upscale it)
 ```javascript
@@ -67,9 +192,24 @@ app.activeDocument.resizeImage(2000, 2000, 300, ResampleMethod.BICUBICSHARPER);
 
 #### Delete alpha channel, delete guides, delete path items
 ```javascript
+//v1
 app.activeDocument.channels.removeAll();
 app.activeDocument.guides.removeAll();
 app.activeDocument.pathItems.removeAll();
+
+//v2 - run only if they exist
+var doc = app.activeDocument;
+if (doc.channels.length > 3) {
+    doc.channels.removeAll();
+}
+
+if (doc.guides.length > 0) {
+    doc.guides.removeAll();
+}
+
+if (doc.pathItems.length > 0) {
+    doc.pathItems.removeAll();
+}
 ```
 
 #### Flatten the document
