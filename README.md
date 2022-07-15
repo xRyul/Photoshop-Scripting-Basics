@@ -1,5 +1,6 @@
 # Photoshop-Scripting-Basics
 
+- Check action execution time
 - Get document dimensions, document aspect ratio, resolution, megapixel count,
 - Check how many documents are open
 - Close
@@ -40,6 +41,48 @@
 - AutoCrop Utility by William Campbell
 - Save TIFF with JPEG Compression 10, ZIP
 - Select Gradient Tool
+
+#### Check Action execution time
+```javascript
+var totalTime = new TimeIt();
+
+doAction("ActionName", "ActionFolderName");
+
+totalTime.stop();
+totalTime.getTime();
+
+function TimeIt() {
+
+  // member variables
+  this.startTime = new Date();
+  this.endTime = new Date();
+
+  // member functions
+  // reset the start time to now
+  this.start = function () {
+        this.startTime = new Date();
+    }
+
+  // reset the end time to now
+  this.stop = function () {
+        this.endTime = new Date();
+    }
+
+  // get the difference in milliseconds between start and stop
+  this.getTime = function () {
+        return (this.endTime.getTime() - this.startTime.getTime()) / 1000;
+
+    }
+
+  // get the current elapsed time from start to now, this sets the endTime
+  this.getElapsed = function () {
+        this.endTime = new Date(); return this.getTime();
+    }
+
+}
+
+alert(totalTime.getTime());
+```
 
 #### Get document dimensions, document aspect ratio, resolution, megapixel count,
 ```javascript
