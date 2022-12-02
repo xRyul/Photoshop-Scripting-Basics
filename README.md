@@ -41,6 +41,7 @@
 - AutoCrop Utility by William Campbell
 - Save TIFF with JPEG Compression 10, ZIP
 - Select Gradient Tool
+- Get basic System Information
 
 #### Check Action execution time
 ```javascript
@@ -930,8 +931,23 @@ function selectTool(tool){
 };
 
 selectTool('gradientTool');
-
 ```
+
+#### Get basic System Information: PSVersion, Operating System, GPU
+```javascript
+//Get basic System Info
+
+// alert(app.systemInformation)
+
+var PSversion = app.systemInformation.split("\r", 1);
+var OS = app.systemInformation.split("\r")[2];
+var OpenCL = app.systemInformation.split("\r")[36].split("\n")[14];
+var GPU = app.systemInformation.split("\r")[36].split("\n")[18];
+
+alert(PSversion + "\n" + OS + "\n" + OpenCL + "\n" + GPU);
+```
+
+
 
 ### Big inspo
 https://github.com/MarshySwamp/
