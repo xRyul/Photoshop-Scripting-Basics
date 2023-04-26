@@ -1,3 +1,6 @@
+// On 1st run user is asked to select path to the image
+// On 2nd/3rd/4th++ runs, no manual input needed - image which was selected earlier will be automatically opened
+
 function openMannequinFileFromPreferences() {
   // Define constants
   var PREFERENCES_FILE_PATH = "~/Documents/Photoshop/UserPreferences_FolderPath_ForMannequin.txt";
